@@ -1,0 +1,22 @@
+/**
+ * TwosCompl chip
+ * Calculates the two's complement of a 16-bit input
+ * 
+ * Input:
+ *   in[16] - 16-bit input number
+ * 
+ * Output:
+ *   out[16] - Two's complement of the input
+ */
+
+ CHIP TwosCompl {
+    IN in[16];
+    OUT out[16];
+
+    PARTS:
+    // Invert all bits using Not16
+    Not16(in=in, out=notIn);
+    
+    // Add 1 to the inverted number
+    Inc16(in=notIn, out=out);
+}

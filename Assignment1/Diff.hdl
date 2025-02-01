@@ -1,0 +1,83 @@
+/**
+ * Chip Diff - Counts how many bits differ between inputs a and b
+ * Strategy:
+ * 1. XOR the inputs to find differing bits (1 when different, 0 when same)
+ * 2. For each 1 from XOR, increment a counter using Add16
+ * 3. The sum will be used as output
+ */
+CHIP Diff {
+    IN a[16], b[16];
+    OUT out[16];
+
+    PARTS:
+    // XOR each pair of bits to find which bits differ
+    Xor(a=a[0], b=b[0], out=diff0);
+    Xor(a=a[1], b=b[1], out=diff1);
+    Xor(a=a[2], b=b[2], out=diff2);
+    Xor(a=a[3], b=b[3], out=diff3);
+    Xor(a=a[4], b=b[4], out=diff4);
+    Xor(a=a[5], b=b[5], out=diff5);
+    Xor(a=a[6], b=b[6], out=diff6);
+    Xor(a=a[7], b=b[7], out=diff7);
+    Xor(a=a[8], b=b[8], out=diff8);
+    Xor(a=a[9], b=b[9], out=diff9);
+    Xor(a=a[10], b=b[10], out=diff10);
+    Xor(a=a[11], b=b[11], out=diff11);
+    Xor(a=a[12], b=b[12], out=diff12);
+    Xor(a=a[13], b=b[13], out=diff13);
+    Xor(a=a[14], b=b[14], out=diff14);
+    Xor(a=a[15], b=b[15], out=diff15);
+    
+    And16(a=false, b=false, out=zero);
+    
+
+    // Increment for each difference found
+    Inc16(in=zero, out=inc0);
+    Mux16(a=zero, b=inc0, sel=diff0, out=count0);
+
+    Inc16(in=count0, out=inc1);
+    Mux16(a=count0, b=inc1, sel=diff1, out=count1);
+
+    Inc16(in=count1, out=inc2);
+    Mux16(a=count1, b=inc2, sel=diff2, out=count2);
+
+    Inc16(in=count2, out=inc3);
+    Mux16(a=count2, b=inc3, sel=diff3, out=count3);
+
+    Inc16(in=count3, out=inc4);
+    Mux16(a=count3, b=inc4, sel=diff4, out=count4);
+
+    Inc16(in=count4, out=inc5);
+    Mux16(a=count4, b=inc5, sel=diff5, out=count5);
+
+    Inc16(in=count5, out=inc6);
+    Mux16(a=count5, b=inc6, sel=diff6, out=count6);
+
+    Inc16(in=count6, out=inc7);
+    Mux16(a=count6, b=inc7, sel=diff7, out=count7);
+
+    Inc16(in=count7, out=inc8);
+    Mux16(a=count7, b=inc8, sel=diff8, out=count8);
+
+    Inc16(in=count8, out=inc9);
+    Mux16(a=count8, b=inc9, sel=diff9, out=count9);
+
+    Inc16(in=count9, out=inc10);
+    Mux16(a=count9, b=inc10, sel=diff10, out=count10);
+
+    Inc16(in=count10, out=inc11);
+    Mux16(a=count10, b=inc11, sel=diff11, out=count11);
+
+    Inc16(in=count11, out=inc12);
+    Mux16(a=count11, b=inc12, sel=diff12, out=count12);
+
+    Inc16(in=count12, out=inc13);
+    Mux16(a=count12, b=inc13, sel=diff13, out=count13);
+
+    Inc16(in=count13, out=inc14);
+    Mux16(a=count13, b=inc14, sel=diff14, out=count14);
+
+    Inc16(in=count14, out=inc15);
+    // set the output of the total sum to "out"
+    Mux16(a=count14, b=inc15, sel=diff15, out=out);
+}

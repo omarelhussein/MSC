@@ -1,0 +1,129 @@
+/**
+* RoundToPow - Rounds down to the nearest power of 2.
+* For each bit position (left to right), checks if:
+* 1. Current bit is 1
+* 2. All bits to its left are 0
+* If both conditions are met, outputs 2^position.
+* 
+* Example 1: in=1025 (0000010000000001)
+*           out=1024 (0000010000000000) // Position 10 is highest 1, all left bits 0
+* Example 2: in=999 (0000001111100111)
+*           out=512 (0000001000000000) // Position 9 is highest 1, all left bits 0
+*/
+CHIP RoundToPow {
+   IN in[16];
+   OUT out[16];
+   
+   PARTS:
+   // For in[15]
+   Not(in=false, out=allzero15);  // No bits to left of 15
+   And(a=in[15], b=allzero15, out=pos15);
+   
+   // For in[14]
+   Not(in=in[15], out=zero15);
+   And(a=in[14], b=zero15, out=pos14);
+   
+   // For in[13]
+   Or(a=in[15], b=in[14], out=left13);
+   Not(in=left13, out=allzero13);
+   And(a=in[13], b=allzero13, out=pos13);
+   
+   // For in[12]
+   Or(a=in[15], b=in[14], out=t12a);
+   Or(a=t12a, b=in[13], out=left12);
+   Not(in=left12, out=allzero12);
+   And(a=in[12], b=allzero12, out=pos12);
+   
+   // For in[11]
+   Or(a=t12a, b=in[13], out=t11a);
+   Or(a=t11a, b=in[12], out=left11);
+   Not(in=left11, out=allzero11);
+   And(a=in[11], b=allzero11, out=pos11);
+   
+   // For in[10]
+   Or(a=t11a, b=in[12], out=t10a);
+   Or(a=t10a, b=in[11], out=left10);
+   Not(in=left10, out=allzero10);
+   And(a=in[10], b=allzero10, out=pos10);
+   
+   // For in[9]
+   Or(a=t10a, b=in[11], out=t9a);
+   Or(a=t9a, b=in[10], out=left9);
+   Not(in=left9, out=allzero9);
+   And(a=in[9], b=allzero9, out=pos9);
+   
+   // For in[8]
+   Or(a=t9a, b=in[10], out=t8a);
+   Or(a=t8a, b=in[9], out=left8);
+   Not(in=left8, out=allzero8);
+   And(a=in[8], b=allzero8, out=pos8);
+   
+   // For in[7]
+   Or(a=t8a, b=in[9], out=t7a);
+   Or(a=t7a, b=in[8], out=left7);
+   Not(in=left7, out=allzero7);
+   And(a=in[7], b=allzero7, out=pos7);
+   
+   // For in[6]
+   Or(a=t7a, b=in[8], out=t6a);
+   Or(a=t6a, b=in[7], out=left6);
+   Not(in=left6, out=allzero6);
+   And(a=in[6], b=allzero6, out=pos6);
+   
+   // For in[5]
+   Or(a=t6a, b=in[7], out=t5a);
+   Or(a=t5a, b=in[6], out=left5);
+   Not(in=left5, out=allzero5);
+   And(a=in[5], b=allzero5, out=pos5);
+   
+   // For in[4]
+   Or(a=t5a, b=in[6], out=t4a);
+   Or(a=t4a, b=in[5], out=left4);
+   Not(in=left4, out=allzero4);
+   And(a=in[4], b=allzero4, out=pos4);
+   
+   // For in[3]
+   Or(a=t4a, b=in[5], out=t3a);
+   Or(a=t3a, b=in[4], out=left3);
+   Not(in=left3, out=allzero3);
+   And(a=in[3], b=allzero3, out=pos3);
+   
+   // For in[2]
+   Or(a=t3a, b=in[4], out=t2a);
+   Or(a=t2a, b=in[3], out=left2);
+   Not(in=left2, out=allzero2);
+   And(a=in[2], b=allzero2, out=pos2);
+   
+   // For in[1]
+   Or(a=t2a, b=in[3], out=t1a);
+   Or(a=t1a, b=in[2], out=left1);
+   Not(in=left1, out=allzero1);
+   And(a=in[1], b=allzero1, out=pos1);
+   
+   // For in[0]
+   Or(a=t1a, b=in[2], out=t0a);
+   Or(a=t0a, b=in[1], out=left0);
+   Not(in=left0, out=allzero0);
+   And(a=in[0], b=allzero0, out=pos0);
+   
+   Or16(
+       a[15]=pos15,
+       a[14]=pos14,
+       a[13]=pos13,
+       a[12]=pos12,
+       a[11]=pos11,
+       a[10]=pos10,
+       a[9]=pos9,
+       a[8]=pos8,
+       a[7]=pos7,
+       a[6]=pos6,
+       a[5]=pos5,
+       a[4]=pos4,
+       a[3]=pos3,
+       a[2]=pos2,
+       a[1]=pos1,
+       a[0]=false,
+       b[0..15]=false,
+       out=out
+   );
+}

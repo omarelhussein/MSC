@@ -1,0 +1,21 @@
+/**
+ * Task1a: (X ∧ ¬Y) ∨ (¬X ∧ ¬Y) ∨ (¬X ∧ Y)
+ * 
+ * Simplification steps:
+ * 1. Group terms with ¬Y: (¬Y)(X ∨ ¬X) ∨ (¬X ∧ Y)
+ * 2. Since (X ∨ ¬X) = 1 --> always true, we can remove:
+ *    = ¬Y ∨ (¬X ∧ Y)
+ * 3. Distribute ¬Y and (¬X ∧ Y):
+ *    = ¬Y ∨ ¬X
+ * 4. Using De Morgan's Law: ¬Y ∨ ¬X = ¬(X ∧ Y)
+ * 
+ * Final simplified expression: ¬(X ∧ Y)
+ * This is equivalent to NAND(X,Y)
+ */
+CHIP Task1a {
+    IN x, y;    // 1-bit input pins
+    OUT out;    // 1-bit output pin
+
+    PARTS:
+    Nand(a=x, b=y, out=out);
+}

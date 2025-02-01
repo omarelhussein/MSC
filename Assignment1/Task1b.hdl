@@ -1,0 +1,30 @@
+/**
+ * Task1b: Simplify ¬(¬X ∧ Y ∧ Z) ∧ ¬(X ∧ Y ∧ ¬Z) ∧ (X ∧ ¬Y ∧ Z)
+ * 
+ * Step 1: Apply DeMorgan's Law to each negated term
+ * Term1: ¬(¬X ∧ Y ∧ Z) = (X ∨ ¬Y ∨ ¬Z)
+ * Term2: ¬(X ∧ Y ∧ ¬Z) = (¬X ∨ ¬Y ∨ Z)
+ * Term3: (X ∧ ¬Y ∧ Z) stays the same
+ * 
+ * Step 2: Our expression is now:
+ * (X ∨ ¬Y ∨ ¬Z) ∧ (¬X ∨ ¬Y ∨ Z) ∧ (X ∧ ¬Y ∧ Z)
+ * 
+ * Step 3: By analyzing the truth table:
+ * - Term3 requires X=1, Y=0, Z=1
+ * - When we plug these values into Term1: (1 ∨ 1 ∨ 0) = 1
+ * - When we plug these values into Term2: (0 ∨ 1 ∨ 1) = 1
+ * 
+ * Therefore, when Term3 is true (X ∧ ¬Y ∧ Z), 
+ * Term1 and Term2 are automatically satisfied.
+ * 
+ * Final simplified expression: (X ∧ ¬Y ∧ Z)
+ */
+CHIP Task1b {
+    IN x, y, z;
+    OUT out;
+
+    PARTS:
+    Not(in=y, out=noty); // Get ¬Y
+    And(a=x, b=noty, out=t1); // X ∧ ¬Y
+    And(a=t1, b=z, out=out); // Final result: X ∧ ¬Y ∧ Z
+}

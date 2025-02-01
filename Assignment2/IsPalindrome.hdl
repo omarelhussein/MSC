@@ -1,0 +1,60 @@
+/**
+ * IsPalindrome chip
+ * Returns 1 if the 16-bit input is a palindrome in binary representation
+ * 
+ * Input:
+ *   in[16] - 16-bit input number
+ * 
+ * Output:
+ *   out - 1 if input is a palindrome, 0 otherwise
+ */
+
+ CHIP IsPalindrome {
+    IN in[16];
+    OUT out;
+
+    PARTS:
+    // Compare bits 0 and 15
+    Xor(a=in[0], b=in[15], out=xor0);
+    Not(in=xor0, out=pair0);
+    
+    // Compare bits 1 and 14
+    Xor(a=in[1], b=in[14], out=xor1);
+    Not(in=xor1, out=pair1);
+    
+    // Compare bits 2 and 13
+    Xor(a=in[2], b=in[13], out=xor2);
+    Not(in=xor2, out=pair2);
+    
+    // Compare bits 3 and 12
+    Xor(a=in[3], b=in[12], out=xor3);
+    Not(in=xor3, out=pair3);
+    
+    // Compare bits 4 and 11
+    Xor(a=in[4], b=in[11], out=xor4);
+    Not(in=xor4, out=pair4);
+    
+    // Compare bits 5 and 10
+    Xor(a=in[5], b=in[10], out=xor5);
+    Not(in=xor5, out=pair5);
+    
+    // Compare bits 6 and 9
+    Xor(a=in[6], b=in[9], out=xor6);
+    Not(in=xor6, out=pair6);
+    
+    // Compare bits 7 and 8
+    Xor(a=in[7], b=in[8], out=xor7);
+    Not(in=xor7, out=pair7);
+
+    // All pairs must match for the number to be a palindrome
+    And(a=pair0, b=pair1, out=and1);
+    And(a=pair2, b=pair3, out=and2);
+    And(a=pair4, b=pair5, out=and3);
+    And(a=pair6, b=pair7, out=and4);
+    
+    And(a=and1, b=and2, out=and12);
+    And(a=and3, b=and4, out=and34);
+    
+    // If all pairs match, the number is a palindrome (out=1)
+    And(a=and12, b=and34, out=out);
+}
