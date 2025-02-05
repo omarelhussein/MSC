@@ -856,24 +856,24 @@ D;JGE
 
 // big hand
 // center of the box: 2560
-@2559
+@2560
 D=A
 @bighandaddress
 M=M+D
 
-@2
+@55
 D=A
 @bighandcounter
 M=D
 
 (BIGHAND)
 @1
-D=-A
+D=A
 @bighandaddress
 A=M
 M=D|M
 
-@1
+@32
 D=-A
 @bighandaddress
 M=M+D
@@ -886,7 +886,7 @@ D=M
 D;JGT
 
 // small hand
-@2560
+@2558
 D=A
 @smallhandaddress
 M=M+D   // Now points to center of the box
@@ -907,7 +907,7 @@ M=D
 D=A     
 @dx     
 M=D
-@80
+@50
 D=A
 @dx     
 M=M+D
@@ -916,7 +916,7 @@ M=M+D
 D=A
 @dy
 M=D
-@35
+@0
 D=A
 @dy     
 M=M+D

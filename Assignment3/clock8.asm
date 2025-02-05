@@ -886,123 +886,166 @@ D=M
 D;JGT
 
 // small hand
-@2560
+@3071
 D=A
 @smallhandaddress
-M=M+D
+M=M+D   // Now points to center of the box
 
-@55
+@35     // Line length
 D=A
-@smallhandcounter
+@length
 M=D
 
-@smallhandaddress
-D=M
-
-@1
-D=A
-@screenpixel
-M=D
-
-@1
-D=A
-// psh1: Pattern-Small-Hand-1Steps
-@psh1
-M=D
-@2
-D=A
-// psh2: Pattern-Small-Hand-2Steps
-@psh2
-M=D
-
-(SMALLHAND)
-@screenpixel
-D=M
-@smallhandaddress
-A=M
-M=D|M
-
-@psh1
-D=M
-// C: condition
-@PSH1C
-D;JLE
-
-@psh2
-D=M
-@PSH2C
-D;JLE
-
+// Store row increment value
 @32
-D=A
-@smallhandaddress
-M=M+D
-
-// shifting
-@screenpixel
-D=M
-@0
-A=D
-D=D+A
-@screenpixel
+D=-A
+@rowIncrement
 M=D
 
-@screenpixel
+// Set up dx and dy for the angle you want
+@1      // dx - we'll increment to desired value
+D=A     
+@dx     
+M=D
+@80
+D=A
+@dx     
+M=M+D
+
+@1      // dy - we'll increment to desired value
+D=A
+@dy
+M=D
+@35
+D=A
+@dy     
+M=M+D
+
+// Initialize error term
+@dx
+D=M
+// Manual right shift by 1 (divide by 2)
+@temp
+M=D
+@0      // Clear D
+D=A
+@error
+M=D     // Initialize error to 0
+@15     // Loop counter
+D=A
+@shiftcount
+M=D
+
+(SHIFTLOOP)
+@temp
+D=M
+@SKIPBIT
+D;JLE   // If current number <= 0, skip adding bit
+
+@error  // Add 1 to result if current bit is 1
+M=M+1
+
+(SKIPBIT)
+// Manual doubling of temp using addition
+@temp
+D=M
+@temp
+M=D
+@temp
+M=M+D
+
+@shiftcount
+D=M
+@shiftcount
+M=D-1
+D=M
+@SHIFTLOOP
+D;JGT
+
+@1      // Initial pixel value
+D=A
+@pixel
+M=D
+
+(DRAWLINE)
+// Plot current pixel
+@pixel
+D=M
+@smallhandaddress
+A=M     // Get to current position
+M=D|M   // Draw the pixel
+
+// Update error
+@error
+D=M
+@dy
+D=D-M   // error -= dy
+@error
+M=D
+
+// Check if error < 0
+@VERTICAL
+D;JLT
+
+(HORIZONTAL)
+// Move pixel left (manual shift using addition)
+@pixel
+D=M
+@pixel
+M=D
+@pixel
+M=M+D
+
+// Check if pixel shifted out
+@pixel
 D=M
 @RESET
 D;JEQ
 
-@psh1
-M=M-1
-@psh2
-M=M-1
-
-@CONTINUESH
+@CONTINUE
 0;JMP
 
-(PSH1C)
-@1
-D=A
-@psh1
-M=D
-@CONTINUESH
-0;JMP
-
-(PSH2C)
-@2
-D=A
-@psh2
-M=D
-
-(CONTINUESH)
-@screenpixel
+(VERTICAL)
+// Move down one row using stored increment
+@rowIncrement
 D=M
+@smallhandaddress
 M=M+D
 
-@smallhandcounter
-M=M-1
+// Update error
+@error
 D=M
+@dx
+D=D+M   // error += dx
+@error
+M=D
 
-@SMALLHAND
+(CONTINUE)
+// Decrement length counter
+@length
+D=M
+@length
+M=D-1
+D=M
+@DRAWLINE
 D;JGT
 
 @END
 0;JMP
 
 (RESET)
-@1
+@1      // Reset pixel to initial value
 D=A
-@screenpixel
+@pixel
 M=D
 
-@smallhandaddress
+@smallhandaddress   // Move to next word
 M=M+1
 
-@smallhandcounter
+@length
 D=M
-
-@SMALLHAND
-0;JMP
+@DRAWLINE
+D;JGT
 
 (END)
 @END
